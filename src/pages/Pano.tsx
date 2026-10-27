@@ -1,11 +1,12 @@
 import { AlertTriangle, ArrowDownLeft, ArrowUpRight, Building2, CalendarClock, Plus, Truck, Wallet } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { vadeBasligi } from '../components/formlar'
-import { Baslik, Bos, Dugme, Kart, Liste, Ozet, Rozet, Satir } from '../components/ui'
+import { Baslik, Bos, Dugme, Kart, Liste, Ozet, Rozet, Satir, useBildirim } from '../components/ui'
 import { ayBasi, aySonu, bugun, gunEkle, gunFarki, para, tarihGoster, vadeYazisi } from '../lib/format'
 import { santiyeOzeti, sevkiyatToplami, toplam } from '../lib/hesap'
+import { ornekKayitlariBul, ornekVerileriKaldir } from '../lib/ornek'
 import { sonElleYedek, useYedekDurumu } from '../lib/otoyedek'
-import { adBul, type TumVeri } from '../lib/veri'
+import { adBul, useCanli, type TumVeri } from '../lib/veri'
 
 export default function Pano({ veri }: { veri: TumVeri }) {
   const git = useNavigate()
@@ -34,6 +35,9 @@ export default function Pano({ veri }: { veri: TumVeri }) {
 
   const bos = !veri.santiyeler.length && !veri.sevkiyatlar.length && !veri.hareketler.length
   const yd = useYedekDurumu()
+  const bildir = useBildirim()
+  /* Veri her değiştiğinde yeniden sayılır */
+  const ornekSayisi = useCanli(async () => (await ornekKayitlariBul()).toplam, [veri]) ?? 0
   const elle = sonElleYedek()
   const yedekUyarisi = bos
     ? ''
@@ -74,6 +78,23 @@ export default function Pano({ veri }: { veri: TumVeri }) {
             <Dugme onClick={() => git('/ayarlar')}>Örnek verilerle dene</Dugme>
           </div>
         </Kart>
+      )}
+
+      {ornekSayisi > 0 && (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-sky-50 px-4 py-3 text-sm text-sky-900 ring-1 ring-sky-200 dark:bg-sky-950/50 dark:text-sky-100 dark:ring-sky-900">
+          <span className="min-w-0 flex-1">
+            <b>Örnek veriler yüklü.</b> Denemeyi bitirince kaldırın; sizin girdiğiniz kayıtlara dokunulmaz.
+          </span>
+          <Dugme
+            kucuk
+            onClick={async () => {
+              if (!confirm(`${ornekSayisi} örnek kayıt kaldırılacak. Sizin girdiğiniz kayıtlara dokunulmaz. Devam edilsin mi?`)) return
+              bildir(`${await ornekVerileriKaldir()} örnek kayıt kaldırıldı`)
+            }}
+          >
+            Örnek verileri kaldır
+          </Dugme>
+        </div>
       )}
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

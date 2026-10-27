@@ -67,8 +67,8 @@ Durum: ✅ bitti · 🔄 sürüyor · ⏳ sırada · ⏸ kullanıcı bekleniyor
 ### Adım 4 — İnternette yayın (önce Mac, sonra iPhone) 🔄
 - KARAR (27 Ekim): Cloudflare `pages.dev` Türkiye'de erişime kapalı → **GitHub Pages**. Kişisel kullanım, ticari değil.
 - Kurgu: kod gizli `insaat-yonetim`'de; GitHub Actions (`.github/workflows/yayin.yml`) her gönderimde test + derleme yapar, derlenen hâli herkese açık `DKDodo/insaat-takip` deposunun `gh-pages` dalına kopyalar → `https://dkdodo.github.io/insaat-takip/`
-- ⏸ Kullanıcı: herkese açık boş `insaat-takip` deposu, yalnız o depoya yazabilen anahtar, gizli depoya `YAYIN_ANAHTARI` olarak eklenmesi
-- ⏳ Yayın dosyasının commit'i (kullanıcı onayıyla), ilk yayından sonra Pages'i açmak (gh-pages dalı)
+- ✅ Yayın deposu, anahtar (Contents R/W, 27 Ekim 2027'de sona erer) ve `YAYIN_ANAHTARI` secret'ı kuruldu
+- ✅ 27 Ekim: ilk yayın başarılı, site canlı: https://dkdodo.github.io/insaat-takip/ (WebKit ile iPhone 17 ve Mac Safari'de açıldı, JavaScript hatası yok)
 - ⏳ Mac: Safari → Dosya → Dock'a Ekle · iPhone 17: Safari → Paylaş → Ana Ekrana Ekle
 - ⏳ Gerçek Mac'te ve iPhone'da Safari ile deneme turu
 - Not: bulut eşitleme (Adım 5) gelene kadar her cihaz kendi verisini tutar

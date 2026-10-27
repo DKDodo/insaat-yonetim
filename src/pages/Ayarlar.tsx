@@ -7,10 +7,10 @@ import { buluttanYenidenIndir, esitle, useEsitleme, type EsitlemeHali } from '..
 import { TelefonaGec } from '../components/TelefonaGec'
 import { bugun } from '../lib/format'
 import { YAYIN_ADRESI } from '../lib/yayin'
-import { ornekVeriYukle } from '../lib/ornek'
+import { ornekKayitlariBul, ornekVerileriKaldir, ornekVeriYukle } from '../lib/ornek'
 import { elleYedekAlindi, simdiYedekle, sonElleYedek, useYedekDurumu } from '../lib/otoyedek'
 import { useTema } from '../lib/tema'
-import { dosyaIndir, hepsiniSil, yedekAl, yedektenYukle, type TumVeri } from '../lib/veri'
+import { dosyaIndir, hepsiniSil, useCanli, yedekAl, yedektenYukle, type TumVeri } from '../lib/veri'
 
 export default function Ayarlar({ veri }: { veri: TumVeri }) {
   const bildir = useBildirim()
@@ -21,6 +21,7 @@ export default function Ayarlar({ veri }: { veri: TumVeri }) {
   const [telefon, setTelefon] = useState(false)
   const { oturum } = useOturum()
   const bulutAcik = bulutHazir() && !!oturum
+  const ornekSayisi = useCanli(async () => (await ornekKayitlariBul()).toplam) ?? 0
   const kayitSayisi =
     veri.cariler.length + veri.santiyeler.length + veri.malzemeler.length + veri.sevkiyatlar.length + veri.hareketler.length + veri.vadeler.length + veri.isciler.length + veri.avanslar.length
 
@@ -123,6 +124,21 @@ export default function Ayarlar({ veri }: { veri: TumVeri }) {
 
         <BulutBolumu />
 
+        {ornekSayisi > 0 && (
+          <Bolum simge={<FlaskConical size={20} />} baslik="Örnek veriler yüklü" aciklama={`Bu cihazda ${ornekSayisi} örnek kayıt var. Kaldırdığınızda yalnız örnek kayıtlar silinir; sizin girdiğiniz kayıtlara dokunulmaz.`}>
+            <Dugme
+              tur="ana"
+              onClick={async () => {
+                if (!confirm(`${ornekSayisi} örnek kayıt kaldırılacak. Sizin girdiğiniz kayıtlara dokunulmaz. Devam edilsin mi?`)) return
+                const n = await ornekVerileriKaldir()
+                bildir(`${n} örnek kayıt kaldırıldı`)
+              }}
+            >
+              <Trash2 size={17} /> Örnek verileri kaldır
+            </Dugme>
+          </Bolum>
+        )}
+
         {kayitSayisi === 0 && !bulutAcik && (
           <Bolum simge={<FlaskConical size={20} />} baslik="Örnek verilerle dene" aciklama="Uygulamayı tanımak için kurgusal şantiye, malzeme ve cari kayıtları yükler. Sonra 'Tüm verileri sil' ile temizleyebilirsiniz.">
             <Dugme
@@ -143,7 +159,13 @@ export default function Ayarlar({ veri }: { veri: TumVeri }) {
               disabled={!kayitSayisi}
               onClick={async () => {
                 if (!confirm('Bu cihazdaki TÜM kayıtlar silinecek. Emin misiniz?')) return
-                if (prompt('Onaylamak için SİL yazın') !== 'SİL') return
+                const yazilan = prompt('Onaylamak için SİL yazın')
+                if (yazilan === null) return
+                // Klavye Türkçe olmasa da kabul et: SİL, SIL, sil, sıl
+                if (!['sil', 'sıl'].includes(yazilan.trim().toLocaleLowerCase('tr-TR'))) {
+                  alert('Silme iptal edildi: onay için SİL yazılmadı. Hiçbir kayıt silinmedi.')
+                  return
+                }
                 const y = await yedekAl()
                 dosyaIndir(`insaat-takip-silmeden-once-${bugun()}.json`, JSON.stringify(y), 'application/json')
                 await hepsiniSil()
