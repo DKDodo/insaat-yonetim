@@ -1,0 +1,8 @@
+node_modules
+dist
+dev-dist
+uygulama/
+*.exe
+.env
+.env.local
+*.log
