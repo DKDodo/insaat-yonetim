@@ -1,0 +1,52 @@
+# İnşaat Takip — otomatik yayın
+# main dalına her gönderimde: testler → derleme → derlenen uygulama herkese açık
+# DKDodo/insaat-takip deposuna kopyalanır → https://dkdodo.github.io/insaat-takip/
+# Asıl kod bu (gizli) depoda kalır; yayın deposuna yalnız derlenmiş dosyalar gider.
+# Gerekli gizli değer: YAYIN_ANAHTARI (yalnız insaat-takip deposuna "Contents: Read and write" izni olan anahtar).
+
+name: Yayın
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: yayin
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  yayin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Bağımlılıklar
+        run: npm ci
+
+      - name: Testler (geçmezse yayın yapılmaz)
+        run: npm test
+
+      - name: Derleme
+        run: npm run build
+
+      - name: Yayın deposuna kopyala
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.YAYIN_ANAHTARI }}
+          external_repository: DKDodo/insaat-takip
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Yayın'

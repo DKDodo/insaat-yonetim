@@ -1,5 +1,5 @@
 import { Download, Printer } from 'lucide-react'
-import { useMemo, useState, type ReactNode } from 'react'
+import { Fragment, useMemo, useState, type ReactNode } from 'react'
 import { SantiyeSecimi } from '../components/formlar'
 import { Baslik, Dugme, Etiket, Girdi, Kart, Ozet, cx } from '../components/ui'
 import { ayBasi, aySonu, bugun, para, sayi, tarihGoster, yuvarla } from '../lib/format'
@@ -187,7 +187,30 @@ function RaporKarti({ baslik, children, disari, className }: { baslik: string; c
 function Tablo({ basliklar, satirlar, alt }: { basliklar: string[]; satirlar: ReactNode[][]; alt?: ReactNode[] }) {
   if (!satirlar.length) return <p className="px-4 pb-5 text-sm text-stone-500">Bu dönemde kayıt yok.</p>
   return (
-    <div className="overflow-x-auto">
+    <>
+    {/* Telefon: her satır bir kart (yana kaydırma yok) */}
+    <div className="divide-y divide-stone-100 md:hidden dark:divide-stone-800 print:hidden">
+      {satirlar.map((r, i) => (
+        <div key={i} className="px-4 py-3">
+          <div className="mb-1.5 font-medium">{r[0]}</div>
+          <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-0.5 text-sm">
+            {r.slice(1).map((h, j) => (
+              <Fragment key={j}>
+                <dt className="text-stone-500">{basliklar[j + 1]}</dt>
+                <dd className="text-right tabular-nums">{h}</dd>
+              </Fragment>
+            ))}
+          </dl>
+        </div>
+      ))}
+      {alt && (
+        <div className="flex items-baseline justify-between px-4 py-3 font-semibold">
+          <span>{alt[0]}</span>
+          <span className="tabular-nums">{alt[alt.length - 1]}</span>
+        </div>
+      )}
+    </div>
+    <div className="hidden overflow-x-auto md:block print:block">
       <table className="w-full min-w-[560px] text-sm">
         <thead>
           <tr className="border-y border-stone-100 text-xs text-stone-500 dark:border-stone-800">
@@ -222,6 +245,7 @@ function Tablo({ basliklar, satirlar, alt }: { basliklar: string[]; satirlar: Re
         )}
       </table>
     </div>
+    </>
   )
 }
 

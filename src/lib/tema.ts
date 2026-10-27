@@ -19,6 +19,8 @@ export function temaUygula(t: Tema): void {
   kok.classList.toggle('dark', t === 'koyu')
   kok.style.colorScheme = t === 'koyu' ? 'dark' : 'light'
   document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'koyu' ? '#0c0a09' : '#f5f5f4')
+  // iPhone bunu bir sonraki açılışta uygular
+  document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')?.setAttribute('content', t === 'koyu' ? 'black-translucent' : 'default')
 }
 
 export function useTema(): [Tema, (t: Tema) => void] {

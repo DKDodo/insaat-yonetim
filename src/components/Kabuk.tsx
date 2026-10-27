@@ -11,6 +11,8 @@ import {
   Package,
   Plus,
   Settings,
+  Share,
+  Smartphone,
   Trash2,
   Truck,
   Users,
@@ -22,6 +24,8 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { bulutHazir } from '../lib/bulutAyar'
 import { useEsitleme } from '../lib/esitleme'
 import { useTema } from '../lib/tema'
+import { iosMu, uygulamaOlarakAcik } from '../lib/yayin'
+import { TelefonaGec } from './TelefonaGec'
 import { cx } from './ui'
 
 export const MENU = [
@@ -49,6 +53,7 @@ export function Kabuk({ children }: { children: ReactNode }) {
   const konum = useLocation().pathname
   const git = useNavigate()
   const [menuAcik, setMenuAcik] = useState(false)
+  const [telefon, setTelefon] = useState(false)
   useEffect(() => {
     setMenuAcik(false)
     window.scrollTo(0, 0)
@@ -90,6 +95,13 @@ export function Kabuk({ children }: { children: ReactNode }) {
             ),
           )}
         </nav>
+        <button
+          type="button"
+          onClick={() => setTelefon(true)}
+          className="mb-2 flex h-10 items-center gap-3 rounded-xl px-3 text-[14.5px] font-medium text-stone-600 ring-1 ring-stone-200 hover:bg-stone-50 hover:text-stone-900 dark:text-stone-300 dark:ring-stone-700 dark:hover:bg-stone-800/60"
+        >
+          <Smartphone size={18} /> Telefondan devam et
+        </button>
         <BulutDurumu />
       </aside>
 
@@ -111,6 +123,7 @@ export function Kabuk({ children }: { children: ReactNode }) {
       </div>
 
       <main className="mx-auto max-w-6xl px-4 pt-5 pb-[calc(110px+env(safe-area-inset-bottom))] md:ml-64 md:px-8 md:pt-0 md:pb-12 print:m-0 print:p-0">
+        <AnaEkranaEkleIpucu />
         {children}
       </main>
 
@@ -172,6 +185,7 @@ export function Kabuk({ children }: { children: ReactNode }) {
           </div>
         </div>
       )}
+      <TelefonaGec acik={telefon} kapat={() => setTelefon(false)} />
     </div>
   )
 }
@@ -304,5 +318,40 @@ function BulutDurumu() {
         {e.bekleyen > 0 && ` · ${e.bekleyen} bekliyor`}
       </span>
     </button>
+  )
+}
+
+/* iPhone Safari'de, uygulama henüz ana ekrana eklenmemişse bir kez gösterilen ipucu. */
+function AnaEkranaEkleIpucu() {
+  const [gizli, setGizli] = useState(() => {
+    try {
+      return localStorage.getItem('insaat-ios-ipucu') === 'kapali'
+    } catch {
+      return false
+    }
+  })
+  if (gizli || !iosMu() || uygulamaOlarakAcik()) return null
+  return (
+    <div className="mb-4 flex items-start gap-3 rounded-2xl bg-amber-50 p-3 text-sm text-amber-900 ring-1 ring-amber-200 dark:bg-amber-950/50 dark:text-amber-100 dark:ring-amber-900 print:hidden">
+      <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" className="size-10 shrink-0 rounded-[22%]" />
+      <div className="min-w-0 flex-1">
+        <b>Uygulama olarak ekleyin.</b> Alttaki <Share size={15} className="inline align-[-2px]" /> <b>Paylaş</b> düğmesine dokunup <b>Ana Ekrana Ekle</b>'yi seçin. Tam ekran açılır, verileriniz kalıcı olur.
+      </div>
+      <button
+        type="button"
+        aria-label="Kapat"
+        className="grid size-9 shrink-0 place-items-center rounded-full text-amber-700 hover:bg-amber-100 dark:text-amber-300 dark:hover:bg-amber-900"
+        onClick={() => {
+          try {
+            localStorage.setItem('insaat-ios-ipucu', 'kapali')
+          } catch {
+            /* yoksay */
+          }
+          setGizli(true)
+        }}
+      >
+        <X size={18} />
+      </button>
+    </div>
   )
 }

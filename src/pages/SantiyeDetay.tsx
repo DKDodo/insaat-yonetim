@@ -110,7 +110,54 @@ export default function SantiyeDetay({ veri }: { veri: TumVeri }) {
             </Dugme>
           </div>
           {malzemeler.length ? (
-            <div className="overflow-x-auto">
+            <>
+            {/* Telefon: her malzeme bir kart; dokununca gittiği sevkiyatlar açılır */}
+            <div className="divide-y divide-stone-100 border-t border-stone-100 md:hidden dark:divide-stone-800 dark:border-stone-800 print:hidden">
+              {malzemeler.map((m) => {
+                const acik = acikMalzeme === m.anahtar
+                const gecmis = sevkiyatlar.flatMap((x) => x.kalemler.filter((k) => kalemAnahtari(k) === m.anahtar).map((k) => ({ x, k })))
+                return (
+                  <div key={m.anahtar}>
+                    <button type="button" aria-expanded={acik} onClick={() => setAcikMalzeme(acik ? null : m.anahtar)} className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-stone-50 dark:active:bg-stone-800/60">
+                      <ChevronRight size={16} className={'shrink-0 text-stone-400 transition ' + (acik ? 'rotate-90' : '')} />
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate font-medium text-stone-900 dark:text-stone-100">{m.ad}</div>
+                        <div className="text-[13px] text-stone-500 tabular-nums">
+                          {sayi(m.miktar)} {m.birim} · ort. {para(m.ortFiyat)} · {m.sefer} sefer
+                        </div>
+                      </div>
+                      <div className="shrink-0 font-semibold tabular-nums">{para(m.tutar)}</div>
+                    </button>
+                    {acik && (
+                      <ul className="mx-4 mb-3 divide-y divide-stone-200/70 rounded-xl bg-stone-50 dark:divide-stone-800 dark:bg-stone-950/60">
+                        {gecmis.map(({ x, k }, i) => (
+                          <li key={x.id + i}>
+                            <button type="button" onClick={() => git(`/gonder/${x.id}`)} className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm">
+                              <span className="min-w-0">
+                                <span className="font-medium">{tarihGoster(x.tarih)}</span>
+                                {x.irsaliyeNo && <span className="text-stone-500"> · İrs. {x.irsaliyeNo}</span>}
+                                <span className="block text-xs text-stone-500 tabular-nums">
+                                  {sayi(k.miktar)} {k.birim} × {para(k.birimFiyat)}
+                                </span>
+                              </span>
+                              <span className="flex shrink-0 items-center gap-1 font-semibold tabular-nums">
+                                {para(satirTutari(k))}
+                                <Pencil size={13} className="text-stone-400" />
+                              </span>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )
+              })}
+              <div className="flex items-baseline justify-between px-4 py-3 font-semibold">
+                <span>Toplam malzeme</span>
+                <span className="tabular-nums">{para(o.malzeme)}</span>
+              </div>
+            </div>
+            <div className="hidden overflow-x-auto md:block print:block">
               <table className="w-full min-w-[520px] text-sm">
                 <thead>
                   <tr className="border-y border-stone-100 text-left text-xs text-stone-500 dark:border-stone-800">
@@ -193,6 +240,7 @@ export default function SantiyeDetay({ veri }: { veri: TumVeri }) {
                 </tfoot>
               </table>
             </div>
+            </>
           ) : (
             <Bos baslik="Bu şantiyeye henüz malzeme gitmedi" eylem={<Dugme tur="ana" onClick={() => git(`/gonder?santiye=${s.id}`)}><Truck size={18} /> Malzeme gönder</Dugme>} />
           )}
@@ -241,7 +289,7 @@ export default function SantiyeDetay({ veri }: { veri: TumVeri }) {
                     <button
                       type="button"
                       aria-label="Sil"
-                      className="grid size-9 shrink-0 place-items-center rounded-lg text-stone-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
+                      className="grid size-11 shrink-0 place-items-center rounded-lg md:size-9 text-stone-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
                       onClick={async () => bildir('Avans silindi', await sil('avanslar', r.a.id))}
                     >
                       <Trash2 size={16} />
@@ -264,7 +312,7 @@ export default function SantiyeDetay({ veri }: { veri: TumVeri }) {
                     <button
                       type="button"
                       aria-label="Sil"
-                      className="grid size-9 shrink-0 place-items-center rounded-lg text-stone-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
+                      className="grid size-11 shrink-0 place-items-center rounded-lg md:size-9 text-stone-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
                       onClick={async () => bildir('Kayıt silindi', await sil('hareketler', r.h.id))}
                     >
                       <Trash2 size={16} />

@@ -163,7 +163,7 @@ export default function Isciler({ veri }: { veri: TumVeri }) {
                   <button
                     type="button"
                     aria-label="Sil"
-                    className="grid size-9 shrink-0 place-items-center rounded-lg text-stone-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
+                    className="grid size-11 shrink-0 place-items-center rounded-lg md:size-9 text-stone-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
                     onClick={async () => bildir('Avans silindi', await sil('avanslar', a.id))}
                   >
                     <Trash2 size={16} />

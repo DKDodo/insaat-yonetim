@@ -7,17 +7,25 @@
     <meta name="description" content="Şantiyelere giden malzeme, maliyet, cari hesap, vade ve avans takibi" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
+    <!-- iPhone durum çubuğu: açık temada standart (koyu yazı); koyu temada içerik Dynamic Island'ın altına uzanır (aşağıdaki betik) -->
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="İnşaat Takip" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <!-- iPhone 17 / 17 Pro (402 × 874 nokta, 3x) açılış ekranları -->
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: light)" href="./acilis-iphone17-acik.png" />
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) and (prefers-color-scheme: dark)" href="./acilis-iphone17-koyu.png" />
     <title>İnşaat Takip</title>
     <script>
       /* İlk boyamada doğru tema: kayıtlı seçim, yoksa sistem ayarı */
       try {
         var t = localStorage.getItem('insaat-tema')
         if (t !== 'acik' && t !== 'koyu') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'koyu' : 'acik'
-        if (t === 'koyu') document.documentElement.classList.add('dark')
+        if (t === 'koyu') {
+          document.documentElement.classList.add('dark')
+          document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]').setAttribute('content', 'black-translucent')
+        }
       } catch (e) {}
     </script>
   </head>

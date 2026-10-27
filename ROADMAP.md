@@ -40,6 +40,8 @@ Durum: ✅ bitti · 🔄 sürüyor · ⏳ sırada · ⏸ kullanıcı bekleniyor
 | 30 | Şantiye ekranında harcama kısmına avans | ✅ "Avans" düğmesi (şantiye seçili, yeni işçi oradan eklenir); harcama, avans ve tahsilat tek listede |
 | 32 | Commit ve GitHub'a gönderim | ✅ Kullanıcı onayladı (27 Ekim) |
 | 33 | Öncelik Mac; iPhone ve Mac için yayın yolu | ✅ KARAR (27 Ekim): ayrı Mac/iPhone uygulaması yok. GitHub → Cloudflare Pages otomatik yayın; Mac'te Safari "Dock'a Ekle", iPhone'da "Ana Ekrana Ekle". Önce Mac |
+| 34 | "Telefondan devam et" seçeneği | ✅ Bilgisayarda sol menüde ve Ayarlar'da: karekod (açık olan ekranla), iPhone'a ekleme adımları, kayıtları yedekle taşıma |
+| 35 | iPhone 17'ye göre tasarım | ✅ WebKit ile 402×874'te denendi: 12 ekranda yana taşma yok; tablolar telefonda kart; büyük dokunma alanları; açılış ekranı; Dynamic Island; "Ana Ekrana Ekle" ipucu |
 | 31 | Ödemelerde "Çek" düğmesi | ✅ Ödeme şekli (Nakit, Havale/EFT, Çek, Senet, Kredi kartı); çek no, banka, şube, keşideci; alınan/verilen çek; "Çekler" süzgeci; tahsil edilince kasaya çek bilgisiyle düşer |
 
 ## Adımlar
@@ -63,9 +65,11 @@ Durum: ✅ bitti · 🔄 sürüyor · ⏳ sırada · ⏸ kullanıcı bekleniyor
 - Onaydan sonra ilk commit ve GitHub'a gönderim
 
 ### Adım 4 — İnternette yayın (önce Mac, sonra iPhone) 🔄
-- ✅ Yayın dosyaları hazır: `public/_headers` (güvenlik ve önbellek), `.node-version`
-- ⏸ Kullanıcı: ücretsiz Cloudflare hesabı açar, Pages'i GitHub deposuna bağlar (derleme: `npm run build`, çıktı: `dist`)
-- ⏳ Her commit'te otomatik yayın; Mac: Safari → Dosya → Dock'a Ekle · iPhone 17: Safari → Paylaş → Ana Ekrana Ekle
+- KARAR (27 Ekim): Cloudflare `pages.dev` Türkiye'de erişime kapalı → **GitHub Pages**. Kişisel kullanım, ticari değil.
+- Kurgu: kod gizli `insaat-yonetim`'de; GitHub Actions (`.github/workflows/yayin.yml`) her gönderimde test + derleme yapar, derlenen hâli herkese açık `DKDodo/insaat-takip` deposunun `gh-pages` dalına kopyalar → `https://dkdodo.github.io/insaat-takip/`
+- ⏸ Kullanıcı: herkese açık boş `insaat-takip` deposu, yalnız o depoya yazabilen anahtar, gizli depoya `YAYIN_ANAHTARI` olarak eklenmesi
+- ⏳ Yayın dosyasının commit'i (kullanıcı onayıyla), ilk yayından sonra Pages'i açmak (gh-pages dalı)
+- ⏳ Mac: Safari → Dosya → Dock'a Ekle · iPhone 17: Safari → Paylaş → Ana Ekrana Ekle
 - ⏳ Gerçek Mac'te ve iPhone'da Safari ile deneme turu
 - Not: bulut eşitleme (Adım 5) gelene kadar her cihaz kendi verisini tutar
 

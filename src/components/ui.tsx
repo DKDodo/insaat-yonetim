@@ -30,7 +30,7 @@ export function Dugme({
       {...p}
       className={cx(
         'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition active:scale-[.98] disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500',
-        kucuk ? 'h-9 px-3 text-sm' : 'h-11 px-4 text-[15px]',
+        kucuk ? 'h-10 px-3 text-sm md:h-9' : 'h-11 px-4 text-[15px]',
         tur === 'ana' && 'bg-amber-500 text-stone-950 hover:bg-amber-400 shadow-sm',
         tur === 'ikincil' &&
           'bg-white text-stone-800 ring-1 ring-stone-200 hover:bg-stone-50 dark:bg-stone-800 dark:text-stone-100 dark:ring-stone-700 dark:hover:bg-stone-700',
@@ -194,6 +194,7 @@ export function Pencere({
     <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center" role="dialog" aria-modal="true" aria-label={baslik}>
       <div className="absolute inset-0 bg-stone-950/40 backdrop-blur-[2px]" onClick={kapat} />
       <div className="relative flex max-h-[92dvh] w-full flex-col rounded-t-3xl bg-stone-50 shadow-2xl dark:bg-stone-900 md:max-w-lg md:rounded-3xl">
+        <div className="mx-auto mt-2 h-1.5 w-10 shrink-0 rounded-full bg-stone-300 md:hidden dark:bg-stone-700" aria-hidden="true" />
         <div className="flex items-center justify-between px-5 pt-4 pb-2">
           <h2 className="text-lg font-semibold text-stone-900 dark:text-stone-50">{baslik}</h2>
           <button type="button" onClick={kapat} className="grid size-9 place-items-center rounded-full text-stone-500 hover:bg-stone-200 dark:hover:bg-stone-800" aria-label="Kapat">

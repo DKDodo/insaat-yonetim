@@ -221,7 +221,39 @@ export function CariDetay({ veri }: { veri: TumVeri }) {
       <Kart className="mt-4">
         <h2 className="px-4 pt-4 pb-2 font-semibold">Hesap ekstresi</h2>
         {ekstre.length ? (
-          <div className="overflow-x-auto">
+          <>
+          {/* Telefon: her hareket bir satır; borç artı, alacak eksi, altta yürüyen bakiye */}
+          <div className="divide-y divide-stone-100 border-t border-stone-100 md:hidden dark:divide-stone-800 dark:border-stone-800 print:hidden">
+            {[...ekstre].reverse().map((r) => (
+              <div key={r.anahtar} className="flex items-center gap-1 pr-2">
+                <button
+                  type="button"
+                  onClick={() => (r.sevkiyatId ? git(`/gonder/${r.sevkiyatId}`) : setHareket({ acik: true, kayit: r.hareket }))}
+                  className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left active:bg-stone-50 dark:active:bg-stone-800/60"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate font-medium text-stone-900 dark:text-stone-100">{r.aciklama}</div>
+                    <div className="text-[13px] text-stone-500 tabular-nums">{tarihGoster(r.tarih)} · bakiye {para(r.bakiye)}</div>
+                  </div>
+                  <div className={cx('shrink-0 text-right font-semibold tabular-nums', r.alacak ? 'text-emerald-600 dark:text-emerald-400' : '')}>
+                    {r.borc ? para(r.borc) : '−' + para(r.alacak)}
+                    <div className="text-[11px] font-normal text-stone-500">{r.borc ? 'Borç' : 'Alacak'}</div>
+                  </div>
+                </button>
+                {r.hareket && (
+                  <button
+                    type="button"
+                    aria-label="Sil"
+                    className="grid size-11 shrink-0 place-items-center rounded-lg text-stone-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
+                    onClick={async () => bildir('Kayıt silindi', await sil('hareketler', r.hareket!.id))}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="hidden overflow-x-auto md:block print:block">
             <table className="w-full min-w-[600px] text-sm">
               <thead>
                 <tr className="border-y border-stone-100 text-left text-xs text-stone-500 dark:border-stone-800">
@@ -266,6 +298,7 @@ export function CariDetay({ veri }: { veri: TumVeri }) {
               </tbody>
             </table>
           </div>
+          </>
         ) : (
           <Bos baslik="Hareket yok" />
         )}

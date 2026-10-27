@@ -4,7 +4,9 @@ import { Baslik, Dugme, Etiket, Girdi, Kart, useBildirim } from '../components/u
 import { cikis, sifreBelirle, useOturum } from '../lib/bulut'
 import { bulutHazir } from '../lib/bulutAyar'
 import { buluttanYenidenIndir, esitle, useEsitleme, type EsitlemeHali } from '../lib/esitleme'
+import { TelefonaGec } from '../components/TelefonaGec'
 import { bugun } from '../lib/format'
+import { YAYIN_ADRESI } from '../lib/yayin'
 import { ornekVeriYukle } from '../lib/ornek'
 import { elleYedekAlindi, simdiYedekle, sonElleYedek, useYedekDurumu } from '../lib/otoyedek'
 import { useTema } from '../lib/tema'
@@ -16,6 +18,7 @@ export default function Ayarlar({ veri }: { veri: TumVeri }) {
   const [tema, temaDegistir] = useTema()
   const [bekle, setBekle] = useState(false)
   const yd = useYedekDurumu()
+  const [telefon, setTelefon] = useState(false)
   const { oturum } = useOturum()
   const bulutAcik = bulutHazir() && !!oturum
   const kayitSayisi =
@@ -110,8 +113,12 @@ export default function Ayarlar({ veri }: { veri: TumVeri }) {
           </div>
         </Bolum>
 
-        <Bolum simge={<Smartphone size={20} />} baslik="iPhone'a uygulama olarak ekle" aciklama="Uygulamayı Safari'de açın, alttaki Paylaş düğmesine dokunun, 'Ana Ekrana Ekle'yi seçin. Simgeye dokununca tam ekran açılır.">
-          <p className="text-sm text-stone-500">Bilgisayarda Edge ya da Chrome'da adres çubuğundaki 'Uygulamayı yükle' simgesiyle masaüstüne kurulabilir.</p>
+        <Bolum simge={<Smartphone size={20} />} baslik="iPhone'a uygulama olarak ekle" aciklama="Karekodu iPhone kamerasıyla okutun, açılan sayfada Paylaş → Ana Ekrana Ekle'yi seçin. Simgeye dokununca tam ekran açılır.">
+          <Dugme onClick={() => setTelefon(true)}>
+            <Smartphone size={17} /> Telefondan devam et (karekod)
+          </Dugme>
+          <p className="mt-3 text-sm text-stone-500">Mac'te: Safari'de {YAYIN_ADRESI} adresini açıp Dosya → Dock'a Ekle.</p>
+          <TelefonaGec acik={telefon} kapat={() => setTelefon(false)} />
         </Bolum>
 
         <BulutBolumu />
