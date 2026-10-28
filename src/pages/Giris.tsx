@@ -2,6 +2,7 @@ import { LogOut, ShieldAlert } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { Dugme, Etiket, Girdi, Kart } from '../components/ui'
 import { cikis, googleIleGiris, sifreyleGiris } from '../lib/bulut'
+import { GOOGLE_GIRISI } from '../lib/bulutAyar'
 
 function Cerceve({ children }: { children: React.ReactNode }) {
   return (
@@ -34,7 +35,7 @@ export default function Giris() {
   const [sifre, setSifre] = useState('')
   const [hata, setHata] = useState('')
   const [bekle, setBekle] = useState(false)
-  const [sifreAcik, setSifreAcik] = useState(false)
+  const [sifreAcik, setSifreAcik] = useState(!GOOGLE_GIRISI)
 
   const google = async () => {
     setHata('')
@@ -63,19 +64,21 @@ export default function Giris() {
   return (
     <Cerceve>
       <Kart className="p-5">
-        <Dugme className="w-full" onClick={google} disabled={bekle}>
-          <GoogleSimgesi /> Google ile giriş yap
-        </Dugme>
+        {GOOGLE_GIRISI && (
+          <Dugme className="w-full" onClick={google} disabled={bekle}>
+            <GoogleSimgesi /> Google ile giriş yap
+          </Dugme>
+        )}
         {!sifreAcik ? (
           <button type="button" className="mt-4 w-full text-center text-sm text-stone-500 hover:text-stone-800 dark:hover:text-stone-200" onClick={() => setSifreAcik(true)}>
             E-posta ve şifre ile giriş
           </button>
         ) : (
-          <form onSubmit={sifreyle} className="mt-5 grid gap-3 border-t border-stone-200 pt-5 dark:border-stone-800">
+          <form onSubmit={sifreyle} className={GOOGLE_GIRISI ? 'mt-5 grid gap-3 border-t border-stone-200 pt-5 dark:border-stone-800' : 'grid gap-3'}>
             <Etiket etiket="E-posta">
               <Girdi type="email" autoComplete="username" value={eposta} onChange={(e) => setEposta(e.target.value)} />
             </Etiket>
-            <Etiket etiket="Şifre" ipucu="Şifreyi Google ile girdikten sonra Ayarlar'dan belirleyebilirsiniz.">
+            <Etiket etiket="Şifre" ipucu={GOOGLE_GIRISI ? "Şifreyi Google ile girdikten sonra Ayarlar'dan belirleyebilirsiniz." : undefined}>
               <Girdi type="password" autoComplete="current-password" value={sifre} onChange={(e) => setSifre(e.target.value)} />
             </Etiket>
             <Dugme tur="ana" type="submit" disabled={bekle}>
@@ -97,7 +100,7 @@ export function Yetkisiz({ eposta }: { eposta?: string }) {
         <ShieldAlert size={36} className="mx-auto text-red-500" />
         <h2 className="mt-3 font-semibold text-stone-900 dark:text-white">Bu hesabın erişim izni yok</h2>
         <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
-          <b>{eposta}</b> ile giriş yapıldı, ama bu adres izinli listede değil. Doğru Google hesabıyla yeniden deneyin.
+          <b>{eposta}</b> ile giriş yapıldı, ama bu adres izinli listede değil. İzinli hesapla yeniden deneyin.
         </p>
         <Dugme className="mt-4 w-full" onClick={() => void cikis()}>
           <LogOut size={17} /> Çıkış yap ve başka hesap seç

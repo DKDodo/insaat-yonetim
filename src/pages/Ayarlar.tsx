@@ -219,7 +219,7 @@ function BulutBolumu() {
           <RefreshCw size={17} /> Şimdi eşitle
         </Dugme>
         <Dugme onClick={() => setSifreAcik((x) => !x)}>
-          <KeyRound size={17} /> Şifre belirle
+          <KeyRound size={17} /> Şifreyi değiştir
         </Dugme>
         <Dugme
           onClick={async () => {
@@ -253,13 +253,13 @@ function BulutBolumu() {
               await sifreBelirle(sifre)
               setSifre('')
               setSifreAcik(false)
-              bildir('Şifre belirlendi; artık e-posta ve şifreyle de girebilirsiniz')
+              bildir('Yeni şifre kaydedildi; bundan sonra bu şifreyle girin')
             } catch (err) {
               alert(err instanceof Error ? err.message : String(err))
             }
           }}
         >
-          <Etiket etiket="Yeni şifre (en az 10 karakter, Gmail şifrenizden farklı)" className="min-w-[240px] flex-1">
+          <Etiket etiket="Yeni şifre (en az 10 karakter)" className="min-w-[240px] flex-1">
             <Girdi type="password" autoComplete="new-password" value={sifre} onChange={(ev) => setSifre(ev.target.value)} />
           </Etiket>
           <Dugme tur="ana" type="submit">

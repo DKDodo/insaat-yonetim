@@ -31,7 +31,7 @@ Durum: ✅ bitti · 🔄 sürüyor · ⏳ sırada · ⏸ kullanıcı bekleniyor
 | 21 | Başka bir Windows, iPhone ve Mac'te de çalışsın | 🔄 Windows: EXE + `uygulama` klasörü kopyalanır. iPhone/Mac: Adım 4–5 |
 | 22 | Veriler program açılıp kapanınca kaybolmasın | ✅ Kapat-aç testi geçti |
 | 23 | Şirketin mali veritabanı: çökme ve veri kaybı olmamalı | 🔄 Adım 2 bitti, bulut ve geçmiş Adım 5–6 |
-| 24 | Gmail ve şifreyle giriş | ⏸ KARAR (27 Ekim): Google ile giriş + yedek e-posta/şifre, Supabase. Kullanıcı Supabase ve Google hesaplarını kuruyor |
+| 24 | Gmail ve şifreyle giriş | 🔄 28 Ekim: e-posta + şifre ile giriş kuruldu (Supabase, yalnız agakurtulus@gmail.com). Google ile giriş sonra (`GOOGLE_GIRISI`) |
 | 25 | "Ne gitti" satırları tıklanabilir olsun | ✅ Malzemeye tıklayınca sevkiyatları açılır |
 | 26 | Programa geri tuşu | ✅ Her ekranda (Pano hariç) |
 | 27 | Her yeni EXE kurulunca eskisi silinsin | ✅ Kapalıysa hemen; açıksa yeni EXE ilk açılışta siler |
@@ -42,6 +42,7 @@ Durum: ✅ bitti · 🔄 sürüyor · ⏳ sırada · ⏸ kullanıcı bekleniyor
 | 33 | Öncelik Mac; iPhone ve Mac için yayın yolu | ✅ KARAR (27 Ekim): ayrı Mac/iPhone uygulaması yok. GitHub → Cloudflare Pages otomatik yayın; Mac'te Safari "Dock'a Ekle", iPhone'da "Ana Ekrana Ekle". Önce Mac |
 | 34 | "Telefondan devam et" seçeneği | ✅ Bilgisayarda sol menüde ve Ayarlar'da: karekod (açık olan ekranla), iPhone'a ekleme adımları, kayıtları yedekle taşıma |
 | 35 | iPhone 17'ye göre tasarım | ✅ WebKit ile 402×874'te denendi: 12 ekranda yana taşma yok; tablolar telefonda kart; büyük dokunma alanları; açılış ekranı; Dynamic Island; "Ana Ekrana Ekle" ipucu |
+| 36 | Örnek veriler geri alınamıyordu (Mac) | ✅ "Örnek verileri kaldır" (Pano ve Ayarlar; yalnız örnekler silinir); "Tüm verileri sil" onayı her klavyede çalışır. d90e2cc ile yayında |
 | 31 | Ödemelerde "Çek" düğmesi | ✅ Ödeme şekli (Nakit, Havale/EFT, Çek, Senet, Kredi kartı); çek no, banka, şube, keşideci; alınan/verilen çek; "Çekler" süzgeci; tahsil edilince kasaya çek bilgisiyle düşer |
 
 ## Adımlar
@@ -77,7 +78,10 @@ Durum: ✅ bitti · 🔄 sürüyor · ⏳ sırada · ⏸ kullanıcı bekleniyor
 - ✅ Supabase projesi açıldı (azfcjaioudmjwsntkviq, kullanıcı açtı)
 - ✅ Veritabanı kurulum SQL'i: `supabase/kurulum.sql` (izin listesi, satır düzeyi güvenlik, kalıcı silme yok, değiştirilemez değişiklik geçmişi, anlık haber)
 - ✅ Uygulama: giriş ekranı (Google + e-posta/şifre), izinsiz hesap ekranı, çevrimdışı öncelikli eşitleme motoru, Ayarlar'da bulut durumu; 13 eşitleme testi
-- ⏸ BEKLETİLİYOR (kullanıcı, 27 Ekim: "Bunu beklet, sonra hatırlat"). Kalan: SQL'i çalıştırmak, Google istemcisini kurmak, publishable key ve Çağatay'ın Gmail adresini göndermek
+- ✅ 28 Ekim (kullanıcı): SQL çalıştırıldı, izin listesine agakurtulus@gmail.com eklendi, hesap açıldı (Auto Confirm), yeni hesap açma kapatıldı, Site URL girildi, publishable key programa eklendi
+- ✅ Canlı denetim: girişsiz okuma boş, girişsiz yazma reddedildi, izin listesi görünmüyor, yeni hesap açılamıyor, yanlış şifre reddediliyor; giriş ekranı WebKit'te (Mac + iPhone 17) 14/14
+- ⏳ Gerçek şifreyle ilk giriş ve eşitleme denemesi (kullanıcı); sonra commit + yayın
+- ⏳ Google ile giriş: Google Cloud istemcisi + Supabase'de Google sağlayıcısı + Redirect URLs, sonra `GOOGLE_GIRISI = true`
 - Supabase (Postgres): veriler bulutta, her cihazda aynı
 - Giriş: Google ile giriş (Gmail hesabı) + yedek olarak e-posta ve şifre; yalnız Çağatay'ın e-postası kayıt olabilir
 - Satır düzeyi güvenlik: her kayıt yalnız sahibinin hesabından okunur/yazılır
